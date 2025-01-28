@@ -25,7 +25,7 @@ struct PressableButtonStyle: ButtonStyle {
     }
 }
 
-enum ButtonStyleOption {
+public enum ButtonStyleOption {
     case highlight, press, plain
 }
 
