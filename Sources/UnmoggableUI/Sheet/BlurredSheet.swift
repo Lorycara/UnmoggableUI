@@ -34,7 +34,7 @@ public extension View {
                             .fill(style)
                             .ignoresSafeArea(.container, edges: .all)
                     )
-                    .presentationDetents(presentationDetents ?? [.height(initialHeight)])
+                    .presentationDetents(presentationDetents ?? [.height(initialHeight), .medium, .fraction(0.99)])
                     .presentationCornerRadius(sheetCornerRadius)
                     .presentationBackgroundInteraction(.enabled(upThrough: .medium))
                     .interactiveDismissDisabled()
