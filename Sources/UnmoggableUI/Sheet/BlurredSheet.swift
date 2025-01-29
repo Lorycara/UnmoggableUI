@@ -23,9 +23,17 @@ public extension View {
     }
     
     //persistentBlurredBottomSheet
-    func persistentBlurredBottomSheetfunc<Content: View> (_ style: AnyShapeStyle,initialHeight: CGFloat, presentationDetents: Set<PresentationDetent>? = nil, sheetCornerRadius: CGFloat? = nil , showDragIndicator: Visibility? ,@ViewBuilder content: @escaping () -> Content) -> some View {
+    func persistentBlurredBottomSheetfunc<Content: View> (
+        _ style: AnyShapeStyle,
+        initialHeight: CGFloat,
+        presentationDetents: Set<PresentationDetent>? = nil,
+        sheetCornerRadius: CGFloat? = nil ,
+        showDragIndicator: Visibility? ,
+        show: Binding<Bool>? = nil ,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
         self
-            .sheet(isPresented: .constant(true), onDismiss: {}) {
+            .sheet(isPresented: show ?? .constant(true), onDismiss: {}) {
                 content()
                     .background(RemoveBackgroundColor())
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
