@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension View {
+public extension View {
     func asNavigationLink(destination: () -> some View) -> some View {
         NavigationLink {
             AnyView(destination())
