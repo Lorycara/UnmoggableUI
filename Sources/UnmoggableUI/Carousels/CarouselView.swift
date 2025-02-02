@@ -14,6 +14,11 @@ public struct CarouselView<T: Hashable, V: View>: View {
     let avatars: [T]
     let content: (T) -> V
     
+    public init(avatars: [T], content: @escaping (T) -> V) {
+        self.avatars = avatars
+        self.content = content
+    }
+    
     // MARK: LOGIC
     @State private var selection: T?
     @Namespace private var selectionCircle
