@@ -38,7 +38,7 @@ public extension View {
     func onFirstAppear(_ action: @escaping () -> Void) -> some View {
         modifier(OnFirstAppearViewModifier(action: action))
     }
-    func onFirstTask(_ action: @escaping () -> Void) -> some View {
-        modifier(OnFirstAppearViewModifier(action: action))
+    func onFirstTask(_ action: @escaping () async -> Void) -> some View {
+        modifier(OnFirstTaskViewModifier(action: action))
     }
 }
