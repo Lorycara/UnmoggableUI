@@ -35,13 +35,15 @@ public struct CarouselView<T: Hashable, V: View>: View {
             
             bullets
         }
-        .frame(height: 200)
         .animation(.bouncy, value: selection)
     }
 }
 
 #Preview {
-//    CarouselView(avatars: AvatarModel.mocks, content: { HeroCellView(avatar: $0)})
+    let imagesurls = ["https://image.shutterstock.com/image-photo/young-man-boho-style-shirt-260nw-2009943446.jpg"]
+//    CarouselView(avatars: imagesurls, content: {
+//
+//    })
 }
 
 // MARK: COMPONENTSs
