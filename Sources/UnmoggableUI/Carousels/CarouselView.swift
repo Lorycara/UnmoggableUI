@@ -91,19 +91,28 @@ extension CarouselView {
         if computedSelection.wrappedValue == nil {
             computedSelection.wrappedValue = avatars.first
         }
+        if selection == nil {
+            selection = avatars.first
+        }
     }
 }
 
 #Preview {
-    @State var selection: String?
+    @Previewable @State var selection: String?
     let imagesurls = ["ciao", "sium", "https://image.shutterstock.com/image-photo/young-man-boho-style-shirt-260nw-2009943446.jpg"]
     
     VStack {
         CarouselView(avatars: imagesurls, selection: $selection) { text in
             Text(text)
+                .anyButtonStyle {
+                    print(selection)
+                }
         }
         CarouselView(avatars: imagesurls) { text in
             Text(text)
+                .anyButtonStyle {
+                    
+                }
         }
     }
 }
