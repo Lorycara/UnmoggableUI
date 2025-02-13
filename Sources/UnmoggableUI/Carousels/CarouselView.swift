@@ -1,28 +1,32 @@
-//
-//  CarouselView.swift
-//  AIChatCourse
-//
-//  Created by Lorenzo Cara on 10/01/25.
-//
-
 import SwiftUI
-// INJECT A VIEW
-// USE A GENERIC
 
-/// Iterates over the array creating a page for each item. The page is injected
 public struct CarouselView<T: Hashable, V: View>: View {
     let avatars: [T]
     let content: (T) -> V
     
-    public init(avatars: [T], content: @escaping (T) -> V) {
+    @Binding private var selection: T?
+    @State private var internalSelection: T?
+    @Namespace private var selectionCircle
+
+    public init(avatars: [T], selection: Binding<T?>? = nil, content: @escaping (T) -> V) {
         self.avatars = avatars
+        self._selection = selection ?? .constant(nil)
         self.content = content
     }
-    
-    // MARK: LOGIC
-    @State private var selection: T?
-    @Namespace private var selectionCircle
-    
+
+    private var computedSelection: Binding<T?> {
+        Binding(
+            get: { selection ?? internalSelection },
+            set: { newValue in
+                if selection != nil {
+                    selection = newValue
+                } else {
+                    internalSelection = newValue
+                }
+            }
+        )
+    }
+
     public var body: some View {
         VStack {
             pagingScroll
@@ -35,18 +39,11 @@ public struct CarouselView<T: Hashable, V: View>: View {
             
             bullets
         }
-        .animation(.bouncy, value: selection)
+        .animation(.bouncy, value: computedSelection.wrappedValue)
     }
 }
 
-#Preview {
-    let imagesurls = ["https://image.shutterstock.com/image-photo/young-man-boho-style-shirt-260nw-2009943446.jpg"]
-//    CarouselView(avatars: imagesurls, content: {
-//
-//    })
-}
-
-// MARK: COMPONENTSs
+// MARK: COMPONENTS
 extension CarouselView {
     private var pagingScroll: some View {
         ScrollView(.horizontal) {
@@ -61,21 +58,21 @@ extension CarouselView {
                         .containerRelativeFrame(.horizontal, alignment: .center)
                 }
             }
-            
         }
         .scrollIndicators(.hidden)
         .scrollTargetLayout()
         .scrollTargetBehavior(.paging)
-        .scrollPosition(id: $selection)
+        .scrollPosition(id: computedSelection)
     }
+    
     private var bullets: some View {
         HStack {
             ForEach(avatars, id: \.self) { avatar in
                 Circle()
                     .foregroundStyle(.secondary.opacity(0.5))
-                    .opacity(selection != avatar ? 1 : 0)
+                    .opacity(computedSelection.wrappedValue != avatar ? 1 : 0)
                     .overlay {
-                        if avatar == selection {
+                        if avatar == computedSelection.wrappedValue {
                             Circle()
                                 .foregroundStyle(Color.accentColor)
                                 .matchedGeometryEffect(id: "selectionCircle", in: selectionCircle)
@@ -91,8 +88,22 @@ extension CarouselView {
 // MARK: LOGIC
 extension CarouselView {
     private func updateSelection() {
-        if selection == nil {
-            selection = avatars.first
+        if computedSelection.wrappedValue == nil {
+            computedSelection.wrappedValue = avatars.first
+        }
+    }
+}
+
+#Preview {
+    @State var selection: String?
+    let imagesurls = ["ciao", "sium", "https://image.shutterstock.com/image-photo/young-man-boho-style-shirt-260nw-2009943446.jpg"]
+    
+    VStack {
+        CarouselView(avatars: imagesurls, selection: $selection) { text in
+            Text(text)
+        }
+        CarouselView(avatars: imagesurls) { text in
+            Text(text)
         }
     }
 }
