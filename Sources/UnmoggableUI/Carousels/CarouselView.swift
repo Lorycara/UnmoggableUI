@@ -3,15 +3,17 @@ import SwiftUI
 public struct CarouselView<T: Hashable, V: View>: View {
     let avatars: [T]
     let content: (T) -> V
+    let showProgress : Bool
     
     @Binding private var selection: T?
     @State private var internalSelection: T?
     @Namespace private var selectionCircle
 
-    public init(avatars: [T], selection: Binding<T?>? = nil, content: @escaping (T) -> V) {
+    public init(avatars: [T], selection: Binding<T?>? = nil, showProgress: Bool = true, content: @escaping (T) -> V) {
         self.avatars = avatars
         self._selection = selection ?? .constant(nil)
         self.content = content
+        self.showProgress = showProgress
     }
 
     private var computedSelection: Binding<T?> {
@@ -37,7 +39,9 @@ public struct CarouselView<T: Hashable, V: View>: View {
                     updateSelection()
                 }
             
-            bullets
+            if showProgress {
+                bullets
+            }
         }
         .animation(.bouncy, value: computedSelection.wrappedValue)
     }
