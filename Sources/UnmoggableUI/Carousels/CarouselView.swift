@@ -4,16 +4,18 @@ public struct CarouselView<T: Hashable, V: View>: View {
     let avatars: [T]
     let content: (T) -> V
     let showProgress : Bool
+    let progressColor : Color
     
     @Binding private var selection: T?
     @State private var internalSelection: T?
     @Namespace private var selectionCircle
 
-    public init(avatars: [T], selection: Binding<T?>? = nil, showProgress: Bool = true, content: @escaping (T) -> V) {
+    public init(avatars: [T], selection: Binding<T?>? = nil, showProgress: Bool = true, progressColor: Color = .accentColor, content: @escaping (T) -> V) {
         self.avatars = avatars
         self._selection = selection ?? .constant(nil)
         self.content = content
         self.showProgress = showProgress
+        self.progressColor = progressColor
     }
 
     private var computedSelection: Binding<T?> {
@@ -78,7 +80,7 @@ extension CarouselView {
                     .overlay {
                         if avatar == computedSelection.wrappedValue {
                             Circle()
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(progressColor)
                                 .matchedGeometryEffect(id: "selectionCircle", in: selectionCircle)
                         }
                     }
