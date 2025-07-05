@@ -5,17 +5,19 @@ public struct CarouselView<T: Hashable, V: View>: View {
     let content: (T) -> V
     let showProgress : Bool
     let progressColor : Color
+    let progressSecondColor : Color
     
     @Binding private var selection: T?
     @State private var internalSelection: T?
     @Namespace private var selectionCircle
 
-    public init(avatars: [T], selection: Binding<T?>? = nil, showProgress: Bool = true, progressColor: Color = .accentColor, content: @escaping (T) -> V) {
+    public init(avatars: [T], selection: Binding<T?>? = nil, showProgress: Bool = true, progressColor: Color = .accentColor, progressSecondColor: Color = .secondary.opacity(0.5), content: @escaping (T) -> V) {
         self.avatars = avatars
         self._selection = selection ?? .constant(nil)
         self.content = content
         self.showProgress = showProgress
         self.progressColor = progressColor
+        self.progressSecondColor = progressSecondColor
     }
 
     private var computedSelection: Binding<T?> {
@@ -75,7 +77,7 @@ extension CarouselView {
         HStack {
             ForEach(avatars, id: \.self) { avatar in
                 Circle()
-                    .foregroundStyle(.secondary.opacity(0.5))
+                    .foregroundStyle(progressSecondColor)
                     .opacity(computedSelection.wrappedValue != avatar ? 1 : 0)
                     .overlay {
                         if avatar == computedSelection.wrappedValue {
